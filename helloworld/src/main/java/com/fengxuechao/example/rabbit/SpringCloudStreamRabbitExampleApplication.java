@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Spring Cloud Stream rabbit 示例
+ * Spring Cloud Stream com.fengxuechao.example.rabbit 示例
  *
  * @author fengxuechao
  */

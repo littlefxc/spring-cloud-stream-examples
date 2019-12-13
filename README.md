@@ -1,4 +1,4 @@
-# spring-cloud-stream-rabbit-example
+# spring-cloud-stream-com.fengxuechao.example.rabbit-example
 
 [TOC]
 
@@ -36,7 +36,7 @@ rabbitmqctl list_users
 
 退出容器访问 rabbitmq web 管理界面，使用新创建的 root 用户登录。
 
-## 使用 spring-cloud-starter-stream-rabbit
+## 使用 spring-cloud-starter-stream-com.fengxuechao.example.rabbit
 
 ### maven 依赖
 
@@ -51,10 +51,10 @@ rabbitmqctl list_users
         <version>1.5.22.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.fengxuechao.example</groupId>
-    <artifactId>spring-cloud-stream-rabbit-example</artifactId>
+    <groupId>example</groupId>
+    <artifactId>spring-cloud-stream-com.fengxuechao.example.rabbit-example</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-cloud-stream-rabbit-example</name>
+    <name>spring-cloud-stream-com.fengxuechao.example.rabbit-example</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -69,7 +69,7 @@ rabbitmqctl list_users
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-stream-rabbit</artifactId>
+            <artifactId>spring-cloud-starter-stream-com.fengxuechao.example.rabbit</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -105,7 +105,7 @@ rabbitmqctl list_users
 ### 创建接收器
 
 ```java
-package com.fengxuechao.example.rabbit;
+package example.com.fengxuechao.example.rabbit;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
