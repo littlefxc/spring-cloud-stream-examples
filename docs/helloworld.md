@@ -1,10 +1,4 @@
-# spring-cloud-stream-examples
-
-## helloword
-
-[]()
-
-[TOC]
+# helloword
 
 ## 使用 docker 启动 rabbitmq
 
@@ -139,6 +133,6 @@ public class SinkReceiver {
 
 ### 发送消息
 
-在 rabbitmq 管理网页 使用 guest 账号登录，
+在 rabbitmq 管理网页使用 guest 账号登录,
 
-
+![helloworld_sendmessage.png](helloworld_sendmessage.png)
