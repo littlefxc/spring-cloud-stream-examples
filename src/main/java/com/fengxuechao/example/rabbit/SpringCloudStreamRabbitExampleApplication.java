@@ -1,4 +1,4 @@
-package com.fengxuechao.example.springcloudstreamrabbitexample;
+package com.fengxuechao.example.rabbit;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
