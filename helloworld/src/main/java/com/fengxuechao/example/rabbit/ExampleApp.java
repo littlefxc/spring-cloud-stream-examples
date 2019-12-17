@@ -9,10 +9,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author fengxuechao
  */
 @SpringBootApplication
-public class SpringCloudStreamRabbitExampleApplication {
+public class ExampleApp {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringCloudStreamRabbitExampleApplication.class, args);
+        SpringApplication.run(ExampleApp.class, args);
     }
 
 }

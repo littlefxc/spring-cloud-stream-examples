@@ -136,3 +136,9 @@ public class SinkReceiver {
 在 rabbitmq 管理网页使用 guest 账号登录,
 
 ![helloworld_sendmessage.png](helloworld_sendmessage.png)
+
+### 结果
+
+![helloworld_sendmessage_result.png](helloworld_sendmessage_result.png)
+
+消息是收到了，但结果好像不一样，这是因为消息没有序列化。
