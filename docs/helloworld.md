@@ -137,8 +137,90 @@ public class SinkReceiver {
 
 ![helloworld_sendmessage.png](helloworld_sendmessage.png)
 
-### 结果
+**结果**
 
 ![helloworld_sendmessage_result.png](helloworld_sendmessage_result.png)
 
 消息是收到了，但结果好像不一样，这是因为消息没有序列化。
+
+### 创建消息生产者
+
+但我们如何生产消息呢？
+
+为了偷懒，我就在一个类中创建了一个定时器用来发送消息
+
+```java
+@Slf4j
+@EnableBinding({Sink.class, Source.class})
+public class SinkReceiver {
+
+    @Autowired
+    private Source source;
+
+    /**
+     * 要指定输出通道
+     */
+    @Autowired
+    @Qualifier("output")
+    private MessageChannel messageChannel;
+
+    /**
+     * 消费消息
+     *
+     * @param payload
+     */
+    @StreamListener(Sink.INPUT)
+    public void receive(@Payload String payload) {
+        log.info("Received:{}", payload);
+    }
+
+    /**
+     * 支持企业消息集成
+     * 处理消息
+     *
+     * @param message
+     * @return
+     */
+    @Transformer(inputChannel = Sink.INPUT, outputChannel = Source.OUTPUT)
+    public Object transform(String message) {
+        return message.toUpperCase();
+    }
+
+    /**
+     * 生产消息
+     */
+    @Scheduled(fixedRate = 2000)
+    public void sendMessage() {
+        log.info("定时发送消息");
+        // 使用 Source 和 MessageChannel 可以达到同样的效果
+        source.output().send(MessageBuilder.withPayload("hello, 123").build());
+//        messageChannel.send(MessageBuilder.withPayload("hello, 123").build());
+    }
+}
+```
+
+**注意**：`@Transformer` 注解，简单提一句 `spring-cloud-stream` 建立在 Enterprise Integration Patterns 定义的概念和基础，框架是 `Spring Integration`
+
+别急，还有关键配置没有配置
+
+application.yml
+
+```yaml
+server:
+  port: 8080
+spring:
+  application:
+    name: example-rabbit-hello
+  rabbitmq:
+    addresses: 192.168.200.19:5672
+  cloud:
+    stream:
+      bindings:
+        output:
+          destination: input
+```
+
+如此，简单的使用 `spring-cloud-stream` 也就入了门。
+
+
+
