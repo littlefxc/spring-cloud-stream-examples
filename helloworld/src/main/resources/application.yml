@@ -3,10 +3,25 @@ server:
 spring:
   application:
     name: example-rabbit-hello
-  rabbitmq:
-    addresses: 192.168.200.19:5672
+#  rabbitmq:
+#    addresses: 192.168.200.19:5672
   cloud:
     stream:
       bindings:
+        input:
+          destination: default.message
+          binder: default-rabbit
         output:
-          destination: input
+          destination: default.message
+          binder: default-rabbit
+      binders:
+        default-rabbit:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                host: 192.168.200.19
+                port: 5672
+                username: guest
+                password: guest
+
