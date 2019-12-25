@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: example-rabbit-hello
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration
   rabbitmq:
     addresses: 192.168.200.19:5672
   cloud:
@@ -33,6 +35,7 @@ spring:
         default-rabbit:
           type: rabbit
           environment:
+            # 配置类 org.springframework.cloud.stream.binder.rabbit.config.RabbitMessageChannelBinderConfiguration
             spring:
               rabbitmq:
                 host: 192.168.200.19
@@ -43,6 +46,7 @@ spring:
         default-kafka:
           type: kafka
           environment:
+            # 配置类 org.springframework.cloud.stream.binder.kafka.properties.KafkaBinderConfigurationProperties
             spring:
               cloud:
                 stream:
