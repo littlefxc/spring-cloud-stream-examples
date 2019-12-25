@@ -3,18 +3,33 @@ server:
 spring:
   application:
     name: example-rabbit-hello
-#  rabbitmq:
-#    addresses: 192.168.200.19:5672
+  rabbitmq:
+    addresses: 192.168.200.19:5672
   cloud:
     stream:
+      # 指定了当前消费者的总实例数量
+      instance-count: 2
+      # 指定当前实例的索引号, 从 0 开始
+      instance-index: 0
       bindings:
         input:
           destination: default.message
           binder: default-rabbit
+          # 通过引入消费组的概念，能够在多实例的情况下，保障每个消息只被组内一个实例进行消费
+          group: group-a
+          consumer:
+            # 开启消费分区
+            partitioned: true
         output:
           destination: default.message
           binder: default-rabbit
+          producer:
+            # 通过该参数指定了分区键的表达式规则，我们可以根据实际的输出消息规则来配置SpEL来生成合适的分区键
+            partition-key-expression: payload
+            # 该参数指定了消息分区的数量
+            partition-count: 2
       binders:
+        # 配置 rabbit
         default-rabbit:
           type: rabbit
           environment:
@@ -24,4 +39,14 @@ spring:
                 port: 5672
                 username: guest
                 password: guest
-
+        # 配置 kafka
+        default-kafka:
+          type: kafka
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    binder:
+                      brokers: 192.168.213.13:9092,192.168.213.14:9092,192.168.213.21:9092
+                      zkNodes: 192.168.213.13:2181,192.168.213.14:2181,192.168.213.21:2181
