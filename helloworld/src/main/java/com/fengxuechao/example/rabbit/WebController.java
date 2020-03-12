@@ -35,6 +35,11 @@ public class WebController {
 
     @GetMapping("/source")
     public void source() {
-        source.output().send(MessageBuilder.withPayload("使用 Source 发送消息").build());
+//        source.output().send(MessageBuilder.withPayload("使用 Source 发送消息").build());
+        source.output().send(
+                MessageBuilder
+                        .withPayload("使用 Source 发送消息")
+                        .setHeader("test", true)
+                        .build());
     }
 }

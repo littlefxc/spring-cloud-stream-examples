@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Sink;
-import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.Message;
 
 /**
  * {@link EnableBinding} 注解实现对消息通道的绑定<br>
@@ -23,10 +23,10 @@ public class SinkReceiver {
     /**
      * 消费消息
      *
-     * @param payload
+     * @param message 消息
      */
     @StreamListener(Sink.INPUT)
-    public void receive(@Payload String payload) {
-        log.info("Received:{}", payload);
+    public void receive(Message<Object> message) {
+        log.info("Received: headers = {}, payload = {}", message.getHeaders(), message.getPayload());
     }
 }

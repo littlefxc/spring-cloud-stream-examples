@@ -1,7 +1,2 @@
 server:
   port: 8081
-spring:
-  cloud:
-    stream:
-      # 指定当前实例的索引号, 从 0 开始
-      instance-index: 1

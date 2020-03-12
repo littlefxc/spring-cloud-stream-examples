@@ -9,44 +9,33 @@ spring:
     addresses: 192.168.200.19:5672
   cloud:
     stream:
-      # 指定了当前消费者的总实例数量
-      instance-count: 2
-      # 指定当前实例的索引号, 从 0 开始
-      instance-index: 0
       bindings:
         input:
           destination: default.message
           binder: default-rabbit
-          # 通过引入消费组的概念，能够在多实例的情况下，保障每个消息只被组内一个实例进行消费
-          group: group-a
+          group: consumer-group # 通过引入消费组的概念，能够在多实例的情况下，保障每个消息只被组内一个实例进行消费
           consumer:
-            # 开启消费分区
-            partitioned: true
+            partitioned: true # 开启消费分区
+            concurrency: 3
         output:
           destination: default.message
           binder: default-rabbit
+          group: producer-group
           producer:
-            # 通过该参数指定了分区键的表达式规则，我们可以根据实际的输出消息规则来配置SpEL来生成合适的分区键
-            partition-key-expression: payload
-            # 该参数指定了消息分区的数量
-            partition-count: 2
+            partition-key-expression: payload # 通过该参数指定了分区键的表达式规则，我们可以根据实际的输出消息规则来配置SpEL来生成合适的分区键
       binders:
-        # 配置 rabbit
-        default-rabbit:
+        default-rabbit: # 配置 rabbit
           type: rabbit
-          environment:
-            # 配置类 org.springframework.cloud.stream.binder.rabbit.config.RabbitMessageChannelBinderConfiguration
+          environment:  # 配置类 org.springframework.cloud.stream.binder.rabbit.config.RabbitMessageChannelBinderConfiguration
             spring:
               rabbitmq:
                 host: 192.168.200.19
                 port: 5672
                 username: guest
                 password: guest
-        # 配置 kafka
-        default-kafka:
+        default-kafka: # 配置 kafka
           type: kafka
-          environment:
-            # 配置类 org.springframework.cloud.stream.binder.kafka.properties.KafkaBinderConfigurationProperties
+          environment: # 配置类 org.springframework.cloud.stream.binder.kafka.properties.KafkaBinderConfigurationProperties
             spring:
               cloud:
                 stream:
