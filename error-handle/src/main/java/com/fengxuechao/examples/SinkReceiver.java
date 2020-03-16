@@ -1,6 +1,7 @@
 package com.fengxuechao.examples;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Sink;
@@ -9,6 +10,8 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.ErrorMessage;
 import org.springframework.scheduling.annotation.EnableScheduling;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * {@link EnableBinding} 注解实现对消息通道的绑定<br>
@@ -26,14 +29,25 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class SinkReceiver {
 
     /**
+     * 设定了计数器count，当count为3的时候抛出AmqpRejectAndDontRequeueException这个特定的异常。此时，当只有当抛出这个异常的时候，才会将消息放入DLQ队列，从而不会造成严重的堆积问题。
+     */
+    private AtomicInteger count = new AtomicInteger(0);
+
+    /**
      * 消费消息
      *
      * @param message 消息
      */
     @StreamListener(Sink.INPUT)
     public void receive(Message<Object> message) {
-        log.info("模拟收到消息处理失败后抛出异常");
-        throw new RuntimeException("消息处理失败");
+        if (count.get() == 3) {
+            count.set(1);
+            throw new AmqpRejectAndDontRequeueException("tried 3 times failed, send to dlq!");
+        } else {
+            count.addAndGet(1);
+            log.error("消息处理失败");
+            throw new RuntimeException("Message consumer failed!");
+        }
     }
 
     /**

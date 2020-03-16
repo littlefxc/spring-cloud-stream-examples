@@ -14,16 +14,24 @@ spring:
         input:
           destination: default-message
           group: consumer-group
+          consumer:
+            maxAttempts: 3               # 最多尝试处理几次，默认3
+            backOffInitialInterval: 1000 # 重试时初始避退间隔，单位毫秒，默认1000
+            backOffMaxInterval: 10000    # 重试时最大避退间隔，单位毫秒，默认10000
+            backOffMultiplier: 2.0       # 避退乘数，默认2.0
         output:
           destination: default-message
       kafka:  # 依赖:spring-cloud-stream-binder-kafka-core
         binder:
           brokers: 192.168.213.13:9092,192.168.213.14:9092,192.168.213.21:9092
           zkNodes: 192.168.213.13:2181,192.168.213.14:2181,192.168.213.21:2181
-      rabbit: # 依赖:spring-cloud-stream-binder-rabbit-core
+      rabbit: # 依赖:spring-cloud-stream-binder-rabbit-core, RabbitMessageChannelBinderConfiguration
         bindings:
           input:
             consumer:
               auto-bind-dlq: true    # 自动将失败的消息发送给DLQ
               republish-to-dlq: true # 获取原始错误的异常堆栈
+              dlq-ttl: 10000         # DLQ队列中消息的存活时间, 当超过配置时间之后，该消息会自动的从DLQ队列中移除
+              requeue-rejected: true # 消息消费失败之后，将消息重新放入队列，消息的消费逻辑会被重复执行，直到这条消息消费成功为止
+
 
