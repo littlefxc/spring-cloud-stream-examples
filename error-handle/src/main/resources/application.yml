@@ -1,0 +1,29 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: example-rabbit-hello
+  rabbitmq:
+    addresses: 192.168.200.19:5672
+    username: guest
+    password: guest
+  cloud:
+    stream:
+      default-binder: rabbit
+      bindings:
+        input:
+          destination: default-message
+          group: consumer-group
+        output:
+          destination: default-message
+      kafka:  # 依赖:spring-cloud-stream-binder-kafka-core
+        binder:
+          brokers: 192.168.213.13:9092,192.168.213.14:9092,192.168.213.21:9092
+          zkNodes: 192.168.213.13:2181,192.168.213.14:2181,192.168.213.21:2181
+      rabbit: # 依赖:spring-cloud-stream-binder-rabbit-core
+        bindings:
+          input:
+            consumer:
+              auto-bind-dlq: true    # 自动将失败的消息发送给DLQ
+              republish-to-dlq: true # 获取原始错误的异常堆栈
+

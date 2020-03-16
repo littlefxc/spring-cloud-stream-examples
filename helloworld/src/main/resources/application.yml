@@ -11,14 +11,14 @@ spring:
     stream:
       bindings:
         input:
-          destination: default.message
+          destination: default-message
           binder: default-rabbit
           group: consumer-group # 通过引入消费组的概念，能够在多实例的情况下，保障每个消息只被组内一个实例进行消费
           consumer:
             partitioned: true # 开启消费分区
             concurrency: 3
         output:
-          destination: default.message
+          destination: default-message
           binder: default-rabbit
           group: producer-group
           producer:

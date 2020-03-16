@@ -10,6 +10,7 @@
 
     <modules>
         <module>helloworld</module>
+        <module>error-handle</module>
     </modules>
 
 </project>
