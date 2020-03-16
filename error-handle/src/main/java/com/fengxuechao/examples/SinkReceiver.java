@@ -1,11 +1,9 @@
 package com.fengxuechao.examples;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.listener.ConditionalRejectingErrorHandler;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Sink;
-import org.springframework.context.annotation.Bean;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
@@ -38,6 +36,11 @@ public class SinkReceiver {
         throw new RuntimeException("消息处理失败");
     }
 
+    /**
+     * 局部错误处理
+     *
+     * @param errorMessage
+     */
     @ServiceActivator(inputChannel = "default-message.consumer-group.errors")
     public void localMessageErrorHandler(ErrorMessage errorMessage) {
         log.error("局部处理消息异常");
@@ -52,7 +55,7 @@ public class SinkReceiver {
     /**
      * 全局错误处理
      * <p>
-     * 针对 topic 为 default.message, 消费者分组为 consumer-group 的消息错误处理通道
+     * 针对 topic 为 default-message, 消费者分组为 consumer-group 的消息错误处理通道
      *
      * @param errorMessage 错误消息
      */
